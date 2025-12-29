@@ -4,11 +4,12 @@ import string
 
 # ============================================================
 # ROLE 3: ORDER & SHIPMENT PROCESSING
-# This role handles:
+# Handles:
 # - Customer orders
 # - Order lifecycle (Pending -> Picked -> Shipped -> Delivered)
 # - Shipment creation / tracking
 # - Logging important operations
+# - Extra helpers for debugging, summaries, and validation
 # ============================================================
 
 
@@ -17,6 +18,11 @@ import string
 # Tracks order + shipment activity
 # ------------------------------------------------------------
 class TransactionLogger:
+    """
+    Centralized logger used by orders and shipments.
+    Keeps a protected list (_records) so logs cannot
+    be modified outside this class.
+    """
 
     def __init__(self):
         self._records = []   # hidden list to protect log integrity
@@ -41,9 +47,21 @@ class TransactionLogger:
             f"Shipment {shipment_id}: {event}"
         )
 
+    def log_warning(self, message):
+        self._add("WARNING", message)
+
     def get_logs(self):
-        # expose logs read-only
+        """Expose logs read-only as a tuple."""
         return tuple(self._records)
+
+    def export_as_text(self):
+        """Return formatted logs as multi-line text."""
+        lines = []
+        for r in self._records:
+            lines.append(
+                f"[{r['time']}] ({r['type']}) -> {r['message']}"
+            )
+        return "\n".join(lines)
 
 
 # ------------------------------------------------------------
@@ -52,16 +70,22 @@ class TransactionLogger:
 # ------------------------------------------------------------
 class CustomerOrder:
 
-    VALID_STATUSES = ["Pending", "Picked", "Shipped", "Delivered", "Cancelled"]
+    VALID_STATUSES = [
+        "Pending",
+        "Picked",
+        "Shipped",
+        "Delivered",
+        "Cancelled"
+    ]
 
     def __init__(self, order_id, customer_name, items, logger):
         """
-        items: list of Product objects
+        items: list of Product objects (or mock objects)
         logger: TransactionLogger instance
         """
         self._order_id = order_id
         self._customer_name = customer_name
-        self._items = items
+        self._items = items or []
         self._status = "Pending"
         self._created_at = datetime.now()
         self._logger = logger
@@ -78,7 +102,10 @@ class CustomerOrder:
 
     @property
     def items(self):
-        return self._items
+        return list(self._items)
+
+    def __repr__(self):
+        return f"<Order #{self._order_id} status={self._status}>"
 
     # Private method to protect status changes
     def _set_status(self, new_status):
@@ -92,6 +119,7 @@ class CustomerOrder:
     # Uses InventoryManager from Role 1
     # --------------------------------------------------------
     def check_availability(self, inventory):
+        """Ensure all products exist in inventory (ignores quantity)."""
         for p in self._items:
             stored = inventory.get_product(p.product_id)
             if stored is None:
@@ -103,7 +131,9 @@ class CustomerOrder:
             raise ValueError("Order can only be picked from Pending state.")
 
         if not self.check_availability(inventory):
-            raise ValueError("One or more products are missing from inventory.")
+            raise ValueError(
+                "One or more products are missing from inventory."
+            )
 
         self._set_status("Picked")
         return True
@@ -117,6 +147,26 @@ class CustomerOrder:
         if self._status != "Shipped":
             raise ValueError("Order must be shipped before delivery.")
         self._set_status("Delivered")
+
+    def cancel(self, reason="User requested"):
+        """Allows cancelling only when not shipped/delivered."""
+        if self._status in ("Shipped", "Delivered"):
+            raise ValueError("Cannot cancel after shipping.")
+
+        self._set_status("Cancelled")
+        self._logger.log_warning(
+            f"Order {self._order_id} cancelled: {reason}"
+        )
+
+    def get_summary(self):
+        """Return basic order summary as dictionary."""
+        return {
+            "order_id": self._order_id,
+            "customer": self._customer_name,
+            "status": self._status,
+            "created": self._created_at,
+            "items_count": len(self._items),
+        }
 
 
 # ------------------------------------------------------------
@@ -132,12 +182,17 @@ class Shipment:
         self._tracking_number = None
         self._created = datetime.now()
         self._delivered = False
+        self._events = []
         self._logger = logger
 
-        self._logger.log_shipment_event(
-            self._shipment_id,
-            "Shipment created"
+        self._add_event("Shipment created")
+
+    def _add_event(self, text):
+        """Internal helper for shipment history."""
+        self._events.append(
+            (datetime.now(), text)
         )
+        self._logger.log_shipment_event(self._shipment_id, text)
 
     @property
     def tracking_number(self):
@@ -148,11 +203,7 @@ class Shipment:
         digits = "".join(random.choices(string.digits, k=8))
         self._tracking_number = f"{letters}-{digits}"
 
-        self._logger.log_shipment_event(
-            self._shipment_id,
-            f"Tracking generated: {self._tracking_number}"
-        )
-
+        self._add_event(f"Tracking generated: {self._tracking_number}")
         return self._tracking_number
 
     def get_eta(self):
@@ -160,14 +211,19 @@ class Shipment:
 
     def mark_delivered(self):
         self._delivered = True
-        self._logger.log_shipment_event(
-            self._shipment_id,
-            "Shipment delivered"
-        )
+        self._add_event("Shipment delivered")
 
     def is_delivered(self):
+        """Return delivery status as boolean."""
         return self._delivered
 
+    def history(self):
+        """Return all shipment events."""
+        return list(self._events)
 
-
-
+    def __repr__(self):
+        return (
+            f"<Shipment {self._shipment_id} "
+            f"delivered={self._delivered} "
+            f"tracking={self._tracking_number}>"
+        )
