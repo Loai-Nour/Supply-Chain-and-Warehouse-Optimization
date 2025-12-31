@@ -314,114 +314,146 @@ Polymorphism is used when calculating storage costs, allowing each product to ap
 
 
 
-Role 2: Warehouse & Storage Management
+## Role 2: Warehouse & Storage Management
 
-This role manages the physical structure of the warehouse and implements the complex logic for optimal storage placement.
+This role manages the physical structure of the warehouse and implements the logic for optimal storage placement.
 
-Responsibilities:
--Represent different types of storage locations
--Enforce storage rules such as weight limits and temperature constraints
--Track current load and available capacity
--Organize multiple storage locations inside a warehouse
--Decide the best storage location for a product
+---
 
-Core Classes:
+### Responsibilities
+- Represent different types of storage locations
+- Enforce storage rules such as weight limits and temperature constraints
+- Track current load and available capacity
+- Organize multiple storage locations inside a warehouse
+- Decide the best storage location for a product
 
-StorageLocation (Abstract Base Class)
+---
 
-StorageLocation is an abstract class that represents any type of storage unit.
+## Core Classes
+
+### StorageLocation (Abstract Base Class)
+
+`StorageLocation` is an abstract class that represents any type of storage unit.  
 It cannot be instantiated directly and serves as a base for all storage types.
-Responsibilities:
--Store common attributes for all storage locations
--Manage capacity and current load
--Define a required method to check if a product can be stored
-Attributes:
--location_id: unique identifier for the storage unit
--capacity: maximum allowed weight
--current_load: current stored weight
--items_count: number of stored items
--last_updated: last time the storage was modified
-Abstract Method:
--is_suitable(product): forces subclasses to define their own suitability rules
-Other Methods:
--add_item(product): adds a product if it is suitable
--remove_item(product): removes a product and updates load
--get_remaining_capacity(): returns remaining capacity
 
-Shelf
+#### Responsibilities
+- Store common attributes for all storage locations
+- Manage capacity and current load
+- Define a required method to check if a product can be stored
 
-The Shelf class represents a normal storage shelf used for durable products.
-Responsibilities:
--Store durable (non-perishable) products
--Enforce height and weight constraints
-Additional Attribute:
--max_height: maximum allowed height for products
-Logic:
--Accepts only DurableProduct objects
--Checks that product height does not exceed the shelf limit
--Ensures total weight does not exceed capacity
+#### Attributes
+- `location_id`: unique identifier for the storage unit
+- `capacity`: maximum allowed weight
+- `current_load`: current stored weight
+- `items_count`: number of stored items
+- `last_updated`: last time the storage was modified
 
+#### Abstract Method
+- `is_suitable(product)`: forces subclasses to define their own suitability rules
 
-OOP Concepts:
--Inheritance (extends StorageLocation)
--Polymorphism (custom is_suitable implementation)
+#### Other Methods
+- `add_item(product)`: adds a product if it is suitable
+- `remove_item(product)`: removes a product and updates load
+- `get_remaining_capacity()`: returns remaining capacity
 
-RefrigeratedUnit:
-The RefrigeratedUnit class represents cold storage for perishable products.
-Responsibilities:
--Store temperature-sensitive products
--Enforce temperature range constraints
--Enforce capacity limits
-Additional Attributes:
--min_temp: minimum supported temperature
--max_temp: maximum supported temperature
-Logic:
--Accepts only PerishableProduct objects
--Checks that required temperature is within the allowed range
--Ensures weight does not exceed capacity
-OOP Concepts:
--Inheritance
--Polymorphism
+---
 
-Warehouse Management:
+### Shelf
 
-Warehouse:
-The Warehouse class represents a warehouse that contains multiple storage locations.
-Responsibilities:
--Store and manage all storage locations
--Calculate total available capacity
--Allow searching for locations
-Attributes:
--name: warehouse name
--locations: list of StorageLocation objects
-Methods:
--add_location(location)
--get_free_capacity()
--list_locations()
--find_location_by_id(location_id)
+The `Shelf` class represents a normal storage shelf used for durable products.
 
-Optimization Engine
+#### Responsibilities
+- Store durable (non-perishable) products
+- Enforce height and weight constraints
 
-OptimizationEngine:
-The OptimizationEngine is responsible for deciding where a product should be stored.
-Responsibilities:
--Work with the warehouse and inventory system
--Evaluate storage locations
--Select the first suitable location for a product
-Attributes:
--inventory_manager: reference to inventory data
--warehouse: reference to the warehouse
+#### Additional Attribute
+- `max_height`: maximum allowed height for products
 
+#### Logic
+- Accepts only `DurableProduct` objects
+- Checks that product height does not exceed the shelf limit
+- Ensures total weight does not exceed capacity
 
+#### OOP Concepts
+- Inheritance (extends `StorageLocation`)
+- Polymorphism (custom `is_suitable` implementation)
 
-Method:
--find_best_location(product): loops through locations and returns the first suitable one, or None if no location is available
+---
+
+### RefrigeratedUnit
+
+The `RefrigeratedUnit` class represents cold storage for perishable products.
+
+#### Responsibilities
+- Store temperature-sensitive products
+- Enforce temperature range constraints
+- Enforce capacity limits
+
+#### Additional Attributes
+- `min_temp`: minimum supported temperature
+- `max_temp`: maximum supported temperature
+
+#### Logic
+- Accepts only `PerishableProduct` objects
+- Checks that required temperature is within the allowed range
+- Ensures weight does not exceed capacity
+
+#### OOP Concepts
+- Inheritance
+- Polymorphism
+
+---
+
+## Warehouse Management
+
+### Warehouse
+
+The `Warehouse` class represents a warehouse that contains multiple storage locations.
+
+#### Responsibilities
+- Store and manage all storage locations
+- Calculate total available capacity
+- Allow searching for locations
+
+#### Attributes
+- `name`: warehouse name
+- `locations`: list of `StorageLocation` objects
+
+#### Methods
+- `add_location(location)`
+- `get_free_capacity()`
+- `list_locations()`
+- `find_location_by_id(location_id)`
+
+---
+
+## Optimization Engine
+
+### OptimizationEngine
+
+The `OptimizationEngine` is responsible for deciding where a product should be stored.
+
+#### Responsibilities
+- Work with the warehouse and inventory system
+- Evaluate storage locations
+- Select the first suitable location for a product
+
+#### Attributes
+- `inventory_manager`: reference to inventory data
+- `warehouse`: reference to the warehouse
+
+#### Method
+- `find_best_location(product)`: loops through locations and returns the first suitable one, or `None` if no location is available
+
 This uses polymorphism, since each storage location decides suitability differently.
 
-OOP Concepts Used:
--Abstraction: StorageLocation defines required behavior
--Inheritance: Shelf and RefrigeratedUnit extend base storage
--Polymorphism: is_suitable() behaves differently per storage type
+---
+
+## OOP Concepts Used
+- Abstraction: `StorageLocation` defines required behavior
+- Inheritance: `Shelf` and `RefrigeratedUnit` extend base storage
+- Polymorphism: `is_suitable()` behaves differently per storage type
+
 
 
 
