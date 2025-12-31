@@ -149,3 +149,66 @@ Polymorphism is used when calculating storage costs, allowing each product to ap
 - Inheritance: PerishableProduct and DurableProduct extend Product
 - Polymorphism: Storage cost calculated dynamically per product type
 - Encapsulation: Controlled access using properties and validation
+
+# 🖥️ SCWOS - Graphical User Interface (Role 4)
+
+**Role:** System Integrator & UI Developer  
+**Technology:** Python (Tkinter)  
+**Project:** Supply Chain and Warehouse Optimization System (SCWOS)
+
+---
+
+## 📖 Component Overview
+The **SCWOS GUI** serves as the central control hub for the Supply Chain Optimization System. It is responsible for bridging the backend logic (Inventory, Warehouse, Orders) with a user-friendly, interactive dashboard. This component implements the **View** and **Controller** layers of the application, ensuring seamless data flow and real-time visualization of warehouse operations.
+
+## ✨ Key Features (My Contribution)
+
+### 1. 📊 Interactive Dashboard
+* **Real-Time KPIs:** Displays live metrics for Total Products, Inventory Value, and Active Orders.
+* **Dynamic Updates:** Automatically refreshes data states whenever backend logic changes.
+
+### 2. 📝 Dynamic Inventory Management
+* **Polymorphic Forms:** The "Add Product" interface changes dynamically based on user selection:
+    * *Perishable:* Shows Expiration Date & Temperature fields.
+    * *Durable:* Shows Material Type & Fragility Checkbox.
+* **Input Validation:** Robust error handling prevents invalid data types (e.g., negative prices) from crashing the system.
+
+### 3. 🏭 Visual Warehouse Optimization
+* **Capacity Visualization:** Uses progress bars to visually represent the load status of shelves and refrigerators.
+* **Optimization Trigger:** Allows users to select a product and execute the Role 2 optimization algorithm with a single click.
+
+### 4. 🚚 Order Workflow Manager
+* **State Management:** Controls the lifecycle of an order through strict button logic:
+    * *Pick* (Validates Stock) $\rightarrow$ *Ship* (Generates Tracking) $\rightarrow$ *Deliver* (Finalizes).
+* **Error Prevention:** Prevents invalid state transitions (e.g., cannot ship an order before picking).
+
+## 🛠️ OOP Implementation in GUI
+
+This interface is not just a script; it is built using strict **Object-Oriented Programming** principles:
+
+| OOP Concept | Application in GUI |
+| :--- | :--- |
+| **Inheritance** | All UI pages (`DashboardFrame`, `InventoryFrame`, etc.) inherit from the parent `tk.Frame` class to modularize the code. |
+| **Composition** | The main `SCWOS_GUI` class is composed of instances of backend classes (`InventoryManager`, `Warehouse`, `TransactionLogger`), effectively binding the frontend to the backend. |
+| **Encapsulation** | UI logic is encapsulated within specific frame classes. For example, `OrderFrame` handles all order logic internally, exposing only necessary methods to the main controller. |
+| **Polymorphism** | The `show_frame()` method uses Duck Typing to call the `.on_show()` refresh method on any frame that supports it, regardless of the frame's specific type. |
+
+## 🚀 Usage Guide
+
+1.  **Launch:** Run `main.py` to start the application.
+2.  **Navigation:** Use the sidebar menu to switch between modules.
+3.  **Demo Data:** The system initializes with pre-loaded data (Milk, Desk, Laptop) to demonstrate functionality immediately.
+<img width="1269" height="749" alt="{25A2FDD6-C52C-4E1D-8A02-3804F63FE55F}" src="https://github.com/user-attachments/assets/28a387d9-1043-4bbc-87be-fdf8ece836dd" />
+<img width="1920" height="1080" alt="{248A1B24-6122-4032-91AA-7095759D9B27}" src="https://github.com/user-attachments/assets/949036f2-9249-4ba7-ab0f-fdf007165b2f" />
+
+
+## 📸 Screen Descriptions
+
+1.  **Dashboard:** High-level system statistics.
+2.  **Inventory:** Tabular view of all products with detailed status columns.
+3.  **Warehouse:** Visual bars showing utilized vs. free space.
+4.  **Orders:** Workflow interface for processing customer orders.
+5.  **Logs:** Read-only view of the system's transaction history.
+
+---
+*Developed by [Loai Nour] – Role 4 Integration Lead*
