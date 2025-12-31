@@ -51,6 +51,8 @@ The application features a sidebar navigation layout with dynamic frames for:
 *Built with ❤️ by the SCWOS Team for E-JUST.*
 ---
 
+## 📖 Roles Description:
+
 ### Role 1:
 
 ## Goal:
