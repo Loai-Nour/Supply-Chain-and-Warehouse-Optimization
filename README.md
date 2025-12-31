@@ -439,12 +439,59 @@ This uses polymorphism, since each storage location decides suitability differen
 - Inheritance: `Shelf` and `RefrigeratedUnit` extend base storage
 - Polymorphism: `is_suitable()` behaves differently per storage type
 
+##Role 3 — Responsibilities & Methods
+ Responsibilities
 
+- Manage customer orders
 
+- Create and manage shipments
 
+- Generate tracking numbers
 
+- Track shipment delivery status
 
+- Validate inventory before picking
 
+- Log all important events (orders + shipments)
+
+🔧 Main Methods
+-Order management
+
+-check_availability(inventory)
+
+-start_picking(inventory)
+
+-mark_shipped()
+
+-mark_delivered()
+
+-cancel(reason)
+
+-get_summary()
+
+-Shipment management
+
+-generate_tracking()
+
+-get_eta()
+
+-mark_delivered()
+
+-is_delivered()
+
+-history()
+
+-Logging / history
+
+-log_order_status(order_id, status)
+
+-log_shipment_event(shipment_id, event)
+
+-log_warning(message)
+
+-get_logs()
+
+-export_as_text()
 
 
 
