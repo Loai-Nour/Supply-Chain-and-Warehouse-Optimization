@@ -205,7 +205,7 @@ classDiagram
     CustomerOrder ..> TransactionLogger : logs events
     Shipment ..> TransactionLogger : logs events
     Shipment -- CustomerOrder : associated with
-
+    
 ---
 *Built with ❤️ by the SCWOS Team for E-JUST.*
 ---
