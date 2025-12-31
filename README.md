@@ -455,43 +455,43 @@ This uses polymorphism, since each storage location decides suitability differen
 - Log all important events (orders + shipments)
 
 ## 🔧 Main Methods
--Order management
+## Order management
 
--check_availability(inventory)
+- check_availability(inventory)
 
--start_picking(inventory)
+- start_picking(inventory)
 
--mark_shipped()
+- mark_shipped()
 
--mark_delivered()
+- mark_delivered()
 
--cancel(reason)
+- cancel(reason)
 
--get_summary()
+- get_summary()
 
--Shipment management
+## Shipment management
 
--generate_tracking()
+- generate_tracking()
 
--get_eta()
+- get_eta()
 
--mark_delivered()
+- mark_delivered()
 
--is_delivered()
+- is_delivered()
 
--history()
+- history()
 
--Logging / history
+## Logging / history
 
--log_order_status(order_id, status)
+- log_order_status(order_id, status)
 
--log_shipment_event(shipment_id, event)
+- log_shipment_event(shipment_id, event)
 
--log_warning(message)
+- log_warning(message)
 
--get_logs()
+- get_logs()
 
--export_as_text()
+- export_as_text()
 
 
 
