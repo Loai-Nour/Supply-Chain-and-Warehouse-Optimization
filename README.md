@@ -2,6 +2,53 @@
 
 SCWOS is an advanced OOP Python project for 3rd year CSE Advanced Programming course at E-JUST. It models a Supply Chain and Warehouse Optimization System, managing hierarchical products, intelligent storage, and logistics to simulate and optimize inventory and order fulfillment workflows.
 
+# 🏭 Supply Chain and Warehouse Optimization System (SCWOS)
+
+**Course:** Advanced Programming (CSE 3rd Year)  
+**Institution:** E-JUST  
+**Team Size:** 4 Members  
+
+---
+
+## 📖 Project Overview
+SCWOS is a comprehensive Python application designed to simulate and optimize modern warehouse logistics. It integrates **Inventory Management**, **Storage Optimization**, and **Order Processing** into a unified dashboard. 
+
+The system leverages **Object-Oriented Programming (OOP)** principles—including Inheritance, Polymorphism, Abstraction, and Encapsulation—to handle complex business logic for perishable and durable goods.
+
+## 🚀 Key Features
+* **Role 1 (Inventory):** Tracks hierarchical products (Perishable vs. Durable) with expiration and fragility logic.
+* **Role 2 (Optimization):** Algorithms to automatically assign the best storage location (Shelf vs. Fridge) based on product requirements.
+* **Role 3 (Logistics):** Full order lifecycle management: *Pending → Picked → Shipped → Delivered*.
+* **Role 4 (UI/Integration):** A professional Tkinter GUI that integrates all modules with real-time visual feedback and logging.
+
+## 🛠️ System Architecture (OOP Roles)
+
+| Module | Responsibility | Key Classes |
+| :--- | :--- | :--- |
+| **Backend Core** | Business Logic | `Product`, `Warehouse`, `Order` |
+| **Inventory** | Data Management | `InventoryManager`, `PerishableProduct` |
+| **Optimization** | Algorithms | `OptimizationEngine`, `StorageLocation` |
+| **Frontend** | User Interface | `SCWOS_GUI`, `DashboardFrame` |
+
+## 💻 How to Run
+
+1.  **Prerequisites:** Python 3.x (No external libraries required).
+2.  **File Structure:** Ensure `main.py` and `backend.py` are in the same folder.
+3.  **Execute:**
+    ```bash
+    python main.py
+    ```
+4.  **Usage:** The system pre-loads demo data ("Milk", "Desk"). Use the Sidebar to navigate between Inventory, Warehouse, and Order screens.
+
+## 📸 Interface
+The application features a sidebar navigation layout with dynamic frames for:
+* **Dashboard:** Real-time KPI cards.
+* **Inventory:** Spreadsheet-style view of stock.
+* **Warehouse:** Visual capacity bars for storage units.
+* **Orders:** Workflow buttons for shipping/delivery.
+
+---
+*Built with ❤️ by the SCWOS Team for E-JUST.*
 ---
 
 ### Role 1:
