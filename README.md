@@ -224,7 +224,7 @@ OOP Concepts:
 -Inheritance
 -Polymorphism
 
-Warehouse Management
+Warehouse Management:
 
 Warehouse:
 The Warehouse class represents a warehouse that contains multiple storage locations.
