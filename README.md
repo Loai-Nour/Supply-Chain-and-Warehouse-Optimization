@@ -439,8 +439,8 @@ This uses polymorphism, since each storage location decides suitability differen
 - Inheritance: `Shelf` and `RefrigeratedUnit` extend base storage
 - Polymorphism: `is_suitable()` behaves differently per storage type
 
-##Role 3 — Responsibilities & Methods
- Responsibilities
+## Role 3 — Responsibilities & Methods
+ ## Responsibilities
 
 - Manage customer orders
 
@@ -454,7 +454,7 @@ This uses polymorphism, since each storage location decides suitability differen
 
 - Log all important events (orders + shipments)
 
-🔧 Main Methods
+## 🔧 Main Methods
 -Order management
 
 -check_availability(inventory)
