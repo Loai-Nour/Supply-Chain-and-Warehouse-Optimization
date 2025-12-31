@@ -48,6 +48,149 @@ The application features a sidebar navigation layout with dynamic frames for:
 * **Orders:** Workflow buttons for shipping/delivery.
 
 ## 🏗️ System Architecture (UML Diagram)
+
+```mermaid
+classDiagram
+    direction TB
+
+    %% ====================================================
+    %% ROLE 4: GUI & INTEGRATION CONTROLLER
+    %% ====================================================
+    class SCWOS_GUI {
+        -logger : TransactionLogger
+        -inventory_mgr : InventoryManager
+        -warehouse : Warehouse
+        -optimizer : OptimizationEngine
+        -active_orders : list
+        +__init__()
+        +setup_sidebar()
+        +show_frame(page_name)
+    }
+
+    %% The GUI is COMPOSED OF the backend subsystems
+    SCWOS_GUI *-- InventoryManager
+    SCWOS_GUI *-- Warehouse
+    SCWOS_GUI *-- OptimizationEngine
+    SCWOS_GUI *-- TransactionLogger
+    SCWOS_GUI o-- CustomerOrder
+
+    %% The UI Frames
+    class InventoryFrame
+    class WarehouseFrame
+    class OrderFrame
+    class DashboardFrame
+    
+    InventoryFrame ..> SCWOS_GUI : uses controller
+    WarehouseFrame ..> SCWOS_GUI : uses controller
+    OrderFrame ..> SCWOS_GUI : uses controller
+
+
+    %% ====================================================
+    %% ROLE 1: PRODUCT & INVENTORY
+    %% ====================================================
+    class Product {
+        <<abstract>>
+        #_product_id : str
+        #_name : str
+        #_base_price : float
+        #_weight_kg : float
+        +product_type()* : str
+        +get_product_info()* : str
+    }
+
+    class PerishableProduct {
+        #_expiry_date : datetime
+        #_req_temperature_c : float
+        +check_status() : str
+    }
+
+    class DurableProduct {
+        #_material_type : str
+        #_is_fragile : bool
+    }
+
+    class InventoryManager {
+        #_inventory : dict
+        +add_product(product) : bool
+        +get_product(product_id) : Product
+        +get_all_products() : list
+    }
+
+    Product <|-- PerishableProduct
+    Product <|-- DurableProduct
+    InventoryManager o-- Product
+
+
+    %% ====================================================
+    %% ROLE 2: WAREHOUSE & OPTIMIZATION
+    %% ====================================================
+    class StorageLocation {
+        <<abstract>>
+        +location_id : str
+        +capacity : float
+        +current_load : float
+        +items : list
+        +is_suitable(product)* : bool
+        +add_item(product) : bool
+    }
+
+    class Shelf {
+        +max_height : float
+    }
+
+    class RefrigeratedUnit {
+        +min_temp : float
+        +max_temp : float
+    }
+
+    class Warehouse {
+        +name : str
+        +locations : list
+        +add_location(location)
+    }
+
+    class OptimizationEngine {
+        +find_best_location(product) : StorageLocation
+    }
+
+    StorageLocation <|-- Shelf
+    StorageLocation <|-- RefrigeratedUnit
+    Warehouse *-- StorageLocation
+    OptimizationEngine ..> InventoryManager : queries
+    OptimizationEngine ..> Warehouse : queries
+    StorageLocation ..> Product : checks suitability
+
+
+    %% ====================================================
+    %% ROLE 3: ORDERS & LOGISTICS
+    %% ====================================================
+    class TransactionLogger {
+        #_logs : list
+        +log(message)
+        +export_as_text() : str
+    }
+
+    class CustomerOrder {
+        +order_id : str
+        +customer : str
+        +items : list
+        +status : str
+        +start_picking(inventory_mgr)
+        +mark_shipped()
+        +mark_delivered()
+    }
+
+    class Shipment {
+        +tracking_number : str
+        +carrier : str
+        +generate_tracking() : str
+    }
+
+    CustomerOrder o-- Product : contains
+    CustomerOrder ..> TransactionLogger : logs events
+    Shipment ..> TransactionLogger : logs events
+    Shipment -- CustomerOrder : associated with
+```
 ---
 *Built with ❤️ by the SCWOS Team for E-JUST.*
 ---
